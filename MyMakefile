@@ -1,0 +1,34 @@
+OBJECT= bayesian.o borderMatting.o compose.o extract.o extractEvent.o global.o main.o
+
+
+PicBlend: ${OBJECT}
+	g++ -g -o  PicBlend *.o `pkg-config --libs opencv`
+
+
+main.o: main/main.cpp main/../global.h main/../extractEvent.h \
+ main/../global.h main/../compose.h
+	g++ -c `pkg-config --cflags opencv` main/main.cpp
+
+bayesian.o: bayesian.cpp bayesian.h
+	g++ -c `pkg-config --cflags opencv` bayesian.cpp
+
+borderMatting.o: borderMatting.cpp borderMatting.h global.h bayesian.h extract.h
+	g++ -c `pkg-config --cflags opencv` borderMatting.cpp
+
+compose.o: compose.cpp compose.h global.h extract.h
+	g++ -c `pkg-config --cflags opencv` compose.cpp
+
+extract.o: extract.cpp extract.h global.h
+	g++ -c `pkg-config --cflags opencv` extract.cpp
+
+extractEvent.o: extractEvent.cpp extractEvent.h global.h compose.h extract.h borderMatting.h
+	g++ -c `pkg-config --cflags opencv` extractEvent.cpp
+
+global.o: global.cpp global.h
+	g++ -c `pkg-config --cflags opencv` global.cpp
+
+
+
+.PHONY: clean
+clean:
+	rm *.o PicBlend
