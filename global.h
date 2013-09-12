@@ -30,6 +30,8 @@ extern Mat backImg;
 
 
 void getBinMask( const Mat& comMask, Mat& binMask );
+void copySubsMat(Mat src, Mat& dest, int row, int col);
+void copySubsMat(Mat src, Mat& dest, int row, int col, Mat mask);
 
 
 #endif

@@ -6,6 +6,7 @@ int x = 0;
 int y = 0;
 double alpha = 1;
 double delta = 0.1;
+bool saveFlag = false;
 //double shrink = 1.2;
 
 
@@ -13,29 +14,16 @@ void showCompImage(Mat& compImg)
 {
     Mat binMask;
     getBinMask(sepAPP.mask, binMask);
-
-    printf("%d %d\n", foreImg.rows, foreImg.cols);
     int newR = foreImg.rows * alpha;
     int newC = foreImg.cols * alpha;
 
     Mat selfFore = foreImg.clone();
     resize(binMask, binMask, Size(newC, newR));
     resize(selfFore, selfFore, Size(newC, newR));
-    // printf("%d %d\n", selfFore.rows, selfFore.cols);
-
-    
+    Mat parentFore;
+    selfFore.copyTo(parentFore, binMask);
     backImg.copyTo(compImg);
-    for (int i = 0; i < newR; ++i)
-    {
-        for (int j = 0; j < newC; ++j)
-        {
-            if(binMask.at<uchar>(i, j) != 0)
-            {
-                for (int k = 0; k < 3; k++)
-                    compImg.at<Vec3b>(x+i, y+j)[k] = selfFore.at<Vec3b>(i, j)[k];
-            }
-        }
-    }
+    copySubsMat(selfFore, compImg, x, y, binMask);
 }
 
 
@@ -79,6 +67,11 @@ void composeKeyPressed(char c, bool& exitFlag)
             if(!zoomImage(foreImg, alpha))
                 alpha += delta;
             break;
+        case 'c':
+            printf("save ...\n");
+            saveFlag = true;
+            break;
+
         default:
             break;
     }
@@ -93,6 +86,10 @@ bool zoomImage(Mat& img, double alpha)
     return true;
 }
 
+void saveCompose(Mat compImg)
+{
+    imwrite("compose.jpg", compImg);
+}
 
 void* composeImage(void* args)
 {
@@ -104,6 +101,11 @@ void* composeImage(void* args)
     {
         showCompImage(compImg);
         imshow("compose", compImg );
+        if(saveFlag)
+        {
+            saveFlag = false;
+            saveCompose(compImg);
+        }  
         char c = (char)waitKey(0); 
         composeKeyPressed(c, exitFlag);         
     }   

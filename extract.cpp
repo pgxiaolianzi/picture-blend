@@ -63,29 +63,27 @@ void Extract::showImage()
         image.copyTo( res );
     else
     {
+       //back color is black
         getBinMask( mask, binMask );
         image.copyTo(res, binMask );  
-        Mat mask2 = \
-        addWeighted()
-        bitwise_and(binMask, alphaImage, showImage);
 
-        // for (int i = 0; i < image.rows; ++i)
-        // {
-        //     for (int j = 0; j < image.cols; ++j)
-        //     {
-        //         if(mask.at<uchar>(i, j) == GC_PR_FGD) //possible foreground
-        //         {
-                        //addWeighted(image, )
-        //             for (int k = 0; k < 3; k++)
-        //                 res.at<Vec3b>(i, j)[k] = image.at<Vec3b>(i, j)[k]*0.5 + PINK[k]*0.5;
-        //         }
-        //         if(mask.at<uchar>(i, j) == GC_PR_BGD) //possibel background
-        //         {
-        //             for (int k = 0; k < 3; k++)
-        //                 res.at<Vec3b>(i, j)[k] = image.at<Vec3b>(i, j)[k]*0.5 + LIGHTBLUE[k]*0.5;
-        //         }
-        //     }
-        // } 
+        //back color set to another color
+        // image.copyTo( res );
+        // Mat whiteBlackMash = binMask * 255;
+        // printf("enter in\n");
+        // bitwise_not(whiteBlackMash, whiteBlackMash);
+        // Mat maskColor(binMask.rows, binMask.cols, res.type());
+        // maskColor.setTo(Scalar::all(128));
+        // bitwise_or(res, maskColor, res, whiteBlackMash);
+
+        //add a mengban
+        Mat maskBack(res.rows, res.cols, res.type(), LIGHTBLUE);
+        addWeighted(image, 0.5, maskBack, 0.5, 0, maskBack);
+        Mat whiteBlackMash = binMask * 255;
+        bitwise_not(whiteBlackMash, whiteBlackMash);
+        Mat background;
+        maskBack.copyTo(background, whiteBlackMash);
+        addWeighted(res, 1, background, 1, 0, res);
     }
     
 
