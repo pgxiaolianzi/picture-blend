@@ -16,10 +16,12 @@ the foreground image can be saved in file "out.jpg",
 and the composite image can be saved in file "compose.jpg"
 
 
-the effect are following:
-origin foreground imge:
+the test effect are followings:
+(1) origin foreground imge:
+https://github.com/pgxiaolianzi/picture-blend/blob/master/test.jpg
 
-origin backgound image:
+(2) origin backgound image:
+https://github.com/pgxiaolianzi/picture-blend/blob/master/back.jpg
 
-compose image:
-
+(3) compose image:
+https://github.com/pgxiaolianzi/picture-blend/blob/master/compose.jpg
